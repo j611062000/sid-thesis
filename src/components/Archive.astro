@@ -2,12 +2,73 @@
 import ResearchCard from './ResearchCard.astro';
 import { getResearch } from '../lib/research';
 import { themes, type Theme } from '../lib/publication';
-interface Props { tag?: Theme; }
+interface Props {
+  tag?: Theme;
+}
 const { tag } = Astro.props;
-const entries = (await getResearch()).filter(({ data }) => !tag || data.tags.includes(tag));
+const entries = (await getResearch()).filter(
+  ({ data }) => !tag || data.tags.includes(tag),
+);
 const published = entries.filter(({ data }) => data.status === 'published');
 const upcoming = entries.filter(({ data }) => data.status === 'upcoming');
 ---
-<nav class="tag-nav" aria-label="Filter research by theme"><a href="/research/" aria-current={!tag ? 'page' : undefined}>All research</a>{themes.map((theme) => <a href={`/research/tag/${theme.toLowerCase()}/`} aria-current={tag === theme ? 'page' : undefined}>{theme}</a>)}</nav>
-<section aria-labelledby="published-heading"><div class="section-heading"><h2 class="eyebrow" id="published-heading">Published research</h2><span class="small-label">{published.length} {published.length === 1 ? 'essay' : 'essays'}</span></div>{published.length ? published.map((entry) => <ResearchCard entry={entry} />) : <div class="empty-state"><span class="empty-mark" aria-hidden="true">↳</span><div><h3>{tag ? `The ${tag.toLowerCase()} archive is taking shape.` : 'The first questions are on the table.'}</h3><p>No {tag ? `${tag.toLowerCase()} ` : ''}research has been published yet. {upcoming.length ? 'Explore the upcoming work below.' : 'Return to all research to explore the planned work.'}</p></div></div>}</section>
-{upcoming.length > 0 && <section class="upcoming-section" aria-labelledby="upcoming-heading"><div class="section-heading"><h2 class="eyebrow" id="upcoming-heading">Upcoming research</h2><span class="small-label">Questions in progress</span></div>{upcoming.map((entry) => <ResearchCard entry={entry} />)}</section>}
+
+<nav class="tag-nav" aria-label="Filter research by theme">
+  <a href="/research/" aria-current={!tag ? 'page' : undefined}>
+    All research
+  </a>
+  {themes.map((theme) => (
+    <a
+      href={`/research/tag/${theme.toLowerCase()}/`}
+      aria-current={tag === theme ? 'page' : undefined}
+    >
+      {theme}
+    </a>
+  ))}
+</nav>
+<section aria-labelledby="published-heading">
+  <div class="section-heading">
+    <h2 class="eyebrow" id="published-heading">
+      Published research
+    </h2>
+    <span class="small-label">
+      {published.length} {published.length === 1 ? 'essay' : 'essays'}
+    </span>
+  </div>
+  {published.length ? (
+    published.map((entry) => <ResearchCard entry={entry} />)
+  ) : (
+    <div class="empty-state">
+      <span class="empty-mark" aria-hidden="true">
+        ↳
+      </span>
+      <div>
+        <h3>
+          {tag
+            ? `The ${tag.toLowerCase()} archive is taking shape.`
+            : 'The first questions are on the table.'}
+        </h3>
+        <p>
+          No {tag ? `${tag.toLowerCase()} ` : ''}research has been published
+          yet.{' '}
+          {upcoming.length
+            ? 'Explore the upcoming work below.'
+            : 'Return to all research to explore the planned work.'}
+        </p>
+      </div>
+    </div>
+  )}
+</section>
+{upcoming.length > 0 && (
+  <section class="upcoming-section" aria-labelledby="upcoming-heading">
+    <div class="section-heading">
+      <h2 class="eyebrow" id="upcoming-heading">
+        Upcoming research
+      </h2>
+      <span class="small-label">Questions in progress</span>
+    </div>
+    {upcoming.map((entry) => (
+      <ResearchCard entry={entry} />
+    ))}
+  </section>
+)}

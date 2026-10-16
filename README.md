@@ -49,12 +49,12 @@ Available tags: **Technology, Business, Capital, Infrastructure, Investment**. A
 
 ### Publication states
 
-| Status | Public page and archive | RSS / Article schema |
-| --- | --- | --- |
-| `draft` (default) | Excluded | Excluded |
-| `upcoming` | Public outline, explicitly labeled | Excluded |
-| `published` with a date at or before build time | Published article | Included |
-| `published` with a future date | Excluded until rebuilt after that date | Excluded |
+| Status                                          | Public page and archive                | RSS / Article schema |
+| ----------------------------------------------- | -------------------------------------- | -------------------- |
+| `draft` (default)                               | Excluded                               | Excluded             |
+| `upcoming`                                      | Public outline, explicitly labeled     | Excluded             |
+| `published` with a date at or before build time | Published article                      | Included             |
+| `published` with a future date                  | Excluded until rebuilt after that date | Excluded             |
 
 Upcoming and draft entries must omit `publishedAt` and `updatedAt`. To publish the initial outline, finish the actual research, replace the outline text, change `status`, and add the real publication date. A future date does **not** schedule a deployment; manually run the deployment workflow or merge a change after the date passes. Public repository source is public even when `status: draft`; keep confidential drafts outside this repository.
 
@@ -93,12 +93,12 @@ Do these steps in order. They are manual account/domain configuration; checking 
 2. **Set the repository domain.** In **j611062000/sid-thesis → Settings → Pages → Custom domain**, save `sidthesis.com`. This is required. GitHub ignores `CNAME` files for custom Actions deployments; the included `public/CNAME` only records the intended domain. See [GitHub custom domain configuration](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
 3. **Configure Cloudflare records** as below using DNS only (gray cloud). This keeps GitHub in charge of HTTPS and redirects and avoids a proxy obscuring verification. Confirm Cloudflare is the domain's authoritative DNS provider. Remove conflicting website A/AAAA/CNAME records for these names, preserving unrelated MX/TXT and mail records. Do not add wildcard records. See [Cloudflare DNS record management](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
-| Type | Name | Content | Proxy |
-| --- | --- | --- | --- |
-| A | `@` | `185.199.108.153` | DNS only |
-| A | `@` | `185.199.109.153` | DNS only |
-| A | `@` | `185.199.110.153` | DNS only |
-| A | `@` | `185.199.111.153` | DNS only |
+| Type  | Name  | Content                | Proxy    |
+| ----- | ----- | ---------------------- | -------- |
+| A     | `@`   | `185.199.108.153`      | DNS only |
+| A     | `@`   | `185.199.109.153`      | DNS only |
+| A     | `@`   | `185.199.110.153`      | DNS only |
+| A     | `@`   | `185.199.111.153`      | DNS only |
 | CNAME | `www` | `j611062000.github.io` | DNS only |
 
 Use Auto TTL. The `www` target has **no protocol, path, or repository name**. Optional IPv6: add four DNS-only AAAA records at `@`: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`. Keep the A records too.

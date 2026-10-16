@@ -5,28 +5,136 @@ import Base from '../../layouts/Base.astro';
 import ResearchCard from '../../components/ResearchCard.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import { getResearch } from '../../lib/research';
-import { formatDate, readingMinutes, researchPath } from '../../lib/publication';
+import {
+  formatDate,
+  readingMinutes,
+  researchPath,
+} from '../../lib/publication';
 import { site } from '../../config';
-export async function getStaticPaths() { return (await getResearch()).map((entry) => ({ params: { id: entry.id }, props: { entry } })); }
+export async function getStaticPaths() {
+  return (await getResearch()).map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
 const { entry } = Astro.props;
 const { data } = entry;
 const { Content, headings } = await render(entry);
 const toc = headings.filter(({ depth }) => depth === 2 || depth === 3);
 const upcoming = data.status === 'upcoming';
-const related = (await getResearch()).filter((other) => other.id !== entry.id && other.data.tags.some((tag) => data.tags.includes(tag))).slice(0, 3);
+const related = (await getResearch())
+  .filter(
+    (other) =>
+      other.id !== entry.id &&
+      other.data.tags.some((tag) => data.tags.includes(tag)),
+  )
+  .slice(0, 3);
 const canonical = new URL(researchPath(entry.id), site.url).href;
 ---
-<Base title={data.title} description={data.description} image={data.image} imageAlt={data.imageAlt} article={!upcoming && data.publishedAt ? { publishedAt: data.publishedAt, updatedAt: data.updatedAt, tags: data.tags } : undefined}>
-  <div class="wrap"><header class="article-heading"><a class="small-link" href="/research/">← Research archive</a><div class="feature-meta"><span class="status">{upcoming ? 'Upcoming research' : 'Research'}</span><span>{data.tags.slice(0, 3).join(' / ')}</span></div><h1>{data.title}</h1><p class="article-deck">{data.description}</p><div class="article-byline"><a href="/about/">By {site.author}</a>{upcoming ? <span>Research outline · Not yet published</span> : <><time datetime={data.publishedAt!.toISOString()}>{formatDate(data.publishedAt!)}</time><span>{readingMinutes(entry.body ?? '')} min read</span></>}{data.updatedAt && <span>Updated {formatDate(data.updatedAt)}</span>}</div></header>
+
+<Base
+  title={data.title}
+  description={data.description}
+  image={data.image}
+  imageAlt={data.imageAlt}
+  article={
+    !upcoming && data.publishedAt
+      ? {
+          publishedAt: data.publishedAt,
+          updatedAt: data.updatedAt,
+          tags: data.tags,
+        }
+      : undefined
+  }
+>
+  <div class="wrap">
+    <header class="article-heading">
+      <a class="small-link" href="/research/">
+        ← Research archive
+      </a>
+      <div class="feature-meta">
+        <span class="status">
+          {upcoming ? 'Upcoming research' : 'Research'}
+        </span>
+        <span>{data.tags.slice(0, 3).join(' / ')}</span>
+      </div>
+      <h1>{data.title}</h1>
+      <p class="article-deck">{data.description}</p>
+      <div class="article-byline">
+        <a href="/about/">By {site.author}</a>
+        {upcoming ? (
+          <span>Research outline · Not yet published</span>
+        ) : (
+          <>
+            <time datetime={data.publishedAt!.toISOString()}>
+              {formatDate(data.publishedAt!)}
+            </time>
+            <span>{readingMinutes(entry.body ?? '')} min read</span>
+          </>
+        )}
+        {data.updatedAt && <span>Updated {formatDate(data.updatedAt)}</span>}
+      </div>
+    </header>
     <div class="article-grid">
-      <aside class="article-sidebar">{toc.length > 1 && <nav aria-label="Table of contents"><p class="eyebrow">On this page</p><ol>{toc.map(({ slug, text, depth }) => <li class:list={{ nested: depth === 3 }}><a href={`#${slug}`}>{text}</a></li>)}</ol></nav>}</aside>
-      <article class="article-content" aria-label={upcoming ? 'Research outline' : 'Research article'}>
-        {upcoming && <div class="publication-notice"><span class="small-dot"></span><p><strong>A question in progress.</strong> This is a planned research outline, not a completed article. No findings or conclusions are presented.</p></div>}
-        <div class="prose"><Content /></div>
-        <div class="article-end"><div class="article-tags">{data.tags.map((tag) => <a href={`/research/tag/${tag.toLowerCase()}/`}>{tag}</a>)}</div><div class="share-line"><a class="small-link" href={canonical}>Permanent link ↗</a><button class="copy-link" type="button" data-url={canonical} hidden>Copy link</button><span class="copy-status" role="status"></span></div></div>
+      <aside class="article-sidebar">
+        {toc.length > 1 && (
+          <nav aria-label="Table of contents">
+            <p class="eyebrow">On this page</p>
+            <ol>
+              {toc.map(({ slug, text, depth }) => (
+                <li class:list={{ nested: depth === 3 }}>
+                  <a href={`#${slug}`}>{text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+      </aside>
+      <article
+        class="article-content"
+        aria-label={upcoming ? 'Research outline' : 'Research article'}
+      >
+        {upcoming && (
+          <div class="publication-notice">
+            <span class="small-dot"></span>
+            <p>
+              <strong>A question in progress.</strong> This is a planned
+              research outline, not a completed article. No findings or
+              conclusions are presented.
+            </p>
+          </div>
+        )}
+        <div class="prose">
+          <Content />
+        </div>
+        <div class="article-end">
+          <div class="article-tags">
+            {data.tags.map((tag) => (
+              <a href={`/research/tag/${tag.toLowerCase()}/`}>{tag}</a>
+            ))}
+          </div>
+          <div class="share-line">
+            <a class="small-link" href={canonical}>
+              Permanent link ↗
+            </a>
+            <button class="copy-link" type="button" data-url={canonical} hidden>
+              Copy link
+            </button>
+            <span class="copy-status" role="status"></span>
+          </div>
+        </div>
       </article>
     </div>
-    {related.length > 0 && <section class="related"><div class="section-heading"><h2 class="eyebrow">Related research</h2></div>{related.map((entry) => <ResearchCard entry={entry} />)}</section>}
+    {related.length > 0 && (
+      <section class="related">
+        <div class="section-heading">
+          <h2 class="eyebrow">Related research</h2>
+        </div>
+        {related.map((entry) => (
+          <ResearchCard entry={entry} />
+        ))}
+      </section>
+    )}
     <Newsletter />
   </div>
 </Base>
@@ -36,8 +144,12 @@ const canonical = new URL(researchPath(entry.id), site.url).href;
     button.hidden = false;
     button.addEventListener('click', async () => {
       const status = document.querySelector('.copy-status');
-      try { await navigator.clipboard.writeText(button.dataset.url!); if (status) status.textContent = 'Link copied.'; }
-      catch { if (status) status.textContent = 'Copy the permanent link instead.'; }
+      try {
+        await navigator.clipboard.writeText(button.dataset.url!);
+        if (status) status.textContent = 'Link copied.';
+      } catch {
+        if (status) status.textContent = 'Copy the permanent link instead.';
+      }
     });
   }
 </script>

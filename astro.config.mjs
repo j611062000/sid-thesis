@@ -9,12 +9,12 @@ export default defineConfig({
   site: 'https://sidthesis.com',
   output: 'static',
   trailingSlash: 'always',
-  integrations: [
-    mdx(),
-    sitemap({ filter: (page) => !page.endsWith('/404/') }),
-  ],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.endsWith('/404/') })],
   markdown: {
-    processor: unified({ remarkPlugins: [remarkMath], rehypePlugins: [rehypeKatex] }),
+    processor: unified({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
     shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } },
   },
   devToolbar: { enabled: false },

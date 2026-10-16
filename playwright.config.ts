@@ -7,11 +7,29 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   use: { baseURL: 'http://127.0.0.1:4321', trace: 'retain-on-failure' },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } } },
-    { name: 'mobile', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } },
+    {
+      name: 'desktop',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1440, height: 1000 },
+      },
+    },
+    {
+      name: 'mobile',
+      use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
+    },
   ],
   webServer: [
-    { command: 'npm run preview -- --ignore-lock --host 127.0.0.1 --port 4321', url: 'http://127.0.0.1:4321', reuseExistingServer: !process.env.CI },
-    { command: 'npm run preview -- --ignore-lock --root .qa/content-fixture --host 127.0.0.1 --port 4322', url: 'http://127.0.0.1:4322', reuseExistingServer: !process.env.CI },
+    {
+      command: 'npm run preview -- --ignore-lock --host 127.0.0.1 --port 4321',
+      url: 'http://127.0.0.1:4321',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command:
+        'npm run preview -- --ignore-lock --root .qa/content-fixture --host 127.0.0.1 --port 4322',
+      url: 'http://127.0.0.1:4322',
+      reuseExistingServer: !process.env.CI,
+    },
   ],
 });
