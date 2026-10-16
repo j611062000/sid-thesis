@@ -1,0 +1,8 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Archive from '../../../components/Archive.astro';
+import { themes } from '../../../lib/publication';
+export function getStaticPaths() { return themes.map((tag) => ({ params: { tag: tag.toLowerCase() }, props: { tag } })); }
+const { tag } = Astro.props;
+---
+<Base title={`${tag} research`} description={`Independent research and upcoming inquiries on ${tag.toLowerCase()} from Sid Thesis.`}><div class="wrap"><header class="page-heading"><p class="eyebrow">Research / {tag}</p><h1>{tag}<span class="brand-dot">.</span></h1><p>A focused lens on a connected world.</p></header><Archive tag={tag} /><div class="page-end"><a class="text-link" href="/research/">← Back to all research</a></div></div></Base>

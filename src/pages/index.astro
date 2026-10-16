@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Newsletter from '../components/Newsletter.astro';
+import CommerceDiagram from '../components/CommerceDiagram.astro';
+import ResearchCard from '../components/ResearchCard.astro';
+import { getResearch } from '../lib/research';
+import { researchPath, formatDate, readingMinutes } from '../lib/publication';
+const entries = await getResearch();
+const featured = entries.find(({ data }) => data.featured) ?? entries[0];
+const themeCards = [
+  { n: '01', name: 'Technology', line: 'What becomes possible.', text: 'The capabilities, constraints, and systems behind technological change.' },
+  { n: '02', name: 'Business', line: 'What becomes valuable.', text: 'Business models, competitive dynamics, and the incentives that shape markets.' },
+  { n: '03', name: 'Capital', line: 'Where value accrues.', text: 'Capital allocation, market structure, and the economics of long-term change.' },
+];
+---
+<Base>
+  <div class="wrap">
+    <section class="hero">
+      <p class="eyebrow"><span class="small-dot"></span> Independent Research on Technology, Business &amp; Capital</p>
+      <h1>Understand the systems.<br /><em>Follow the value.</em></h1>
+      <div class="hero-bottom"><p>Research at the intersection of how technology works,<br class="desktop-break" /> how businesses compete, and where capital flows.</p><a class="text-link" href="/research/">Explore the research <span aria-hidden="true">↗</span></a></div>
+    </section>
+    {featured && <section class="featured-section" aria-labelledby="featured-heading">
+      <div class="section-heading"><h2 class="eyebrow" id="featured-heading">{featured.data.status === 'upcoming' ? 'On the research desk' : 'Featured research'}</h2><span class="small-label">An independent perspective</span></div>
+      <div class="featured-grid">
+        <div class="featured-copy">
+          <div class="feature-meta"><span class="status">{featured.data.status === 'upcoming' ? 'Upcoming' : 'Research'}</span><span>{featured.data.tags.slice(0, 2).join(' / ')}</span></div>
+          <h3><a href={researchPath(featured.id)}>{featured.data.title}</a></h3>
+          <p>{featured.data.description}</p>
+          {featured.data.status === 'published' && <p class="small-label">{formatDate(featured.data.publishedAt!)} · {readingMinutes(featured.body ?? '')} min read</p>}
+          <a class="text-link" href={researchPath(featured.id)}>{featured.data.status === 'upcoming' ? 'Explore the research outline' : 'Read the research'} <span aria-hidden="true">↗</span></a>
+        </div>
+        {featured.id === 'the-economics-of-agentic-commerce' ? <CommerceDiagram /> : <div class="editorial-panel"><span class="eyebrow">Sid Thesis / Research</span><p>Look beneath<br />the surface.</p><span>Technology · Business · Capital</span></div>}
+      </div>
+    </section>}
+    <section class="themes-section" aria-labelledby="themes-heading">
+      <div class="section-heading"><h2 class="eyebrow" id="themes-heading">Three lenses. One connected world.</h2><a class="small-link" href="/research/">All themes <span aria-hidden="true">↗</span></a></div>
+      <div class="theme-grid">{themeCards.map((theme) => <a class="theme-card" href={`/research/tag/${theme.name.toLowerCase()}/`}><span class="theme-number">{theme.n}</span><h3>{theme.name}<span aria-hidden="true">↗</span></h3><p class="theme-line">{theme.line}</p><p>{theme.text}</p></a>)}</div>
+      <p class="themes-note">Connecting the dots through <a href="/research/tag/infrastructure/">Infrastructure</a> and <a href="/research/tag/investment/">Investment</a>.</p>
+    </section>
+    {entries.length > 1 && <section><div class="section-heading"><h2 class="eyebrow">More research</h2><a href="/research/">View archive ↗</a></div>{entries.filter((entry) => entry.id !== featured?.id).slice(0, 3).map((entry) => <ResearchCard entry={entry} />)}</section>}
+    <section class="author-intro"><p class="eyebrow">Behind the research</p><div><h2>A builder’s perspective.<br />An investor’s questions.</h2><p>I’m Sid, a software engineer with a background in quantitative finance, financial markets, distributed systems, payments, and entrepreneurship. This is where I bring those perspectives together.</p><a class="text-link" href="/about/">About Sid Thesis <span aria-hidden="true">↗</span></a></div></section>
+    <Newsletter />
+  </div>
+</Base>
