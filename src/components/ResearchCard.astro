@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, readingMinutes, researchPath } from '../lib/publication';
+interface Props {
+  entry: CollectionEntry<'research'>;
+}
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<article class="research-row">
+  <div class="row-meta">
+    {data.status === 'upcoming' ? (
+      <span class="status">Upcoming</span>
+    ) : (
+      <time datetime={data.publishedAt!.toISOString()}>
+        {formatDate(data.publishedAt!)}
+      </time>
+    )}
+    <span>
+      {data.status === 'published'
+        ? `${readingMinutes(entry.body ?? '')} min read`
+        : 'Research outline'}
+    </span>
+  </div>
+  <div>
+    <div class="eyebrow">{data.tags.slice(0, 3).join(' / ')}</div>
+    <h3>
+      <a href={researchPath(entry.id)}>{data.title}</a>
+    </h3>
+    <p>{data.description}</p>
+  </div>
+  <a
+    class="row-arrow"
+    href={researchPath(entry.id)}
+    aria-label={`${data.status === 'upcoming' ? 'View outline' : 'Read'}: ${data.title}`}
+  >
+    ↗
+  </a>
+</article>

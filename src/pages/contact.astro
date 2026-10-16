@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config';
+---
+
+<Base
+  title="Contact"
+  description="Contact information for Sid Thesis: research questions, source suggestions, corrections, and thoughtful discussion."
+>
+  <div class="wrap">
+    <header class="page-heading">
+      <p class="eyebrow">Continue the conversation</p>
+      <h1>
+        Better questions.
+        <br />
+        <em>Better understanding.</em>
+      </h1>
+      <p>
+        Research benefits from thoughtful disagreement, useful sources, and
+        perspectives from people building in the field.
+      </p>
+    </header>
+    <div class="contact-panel">
+      <div>
+        <h2>Get in touch</h2>
+        <p>For research discussions, corrections, or source suggestions.</p>
+      </div>
+      <div>
+        {site.contactUrl ? (
+          <a class="button" href={site.contactUrl}>
+            Contact Sid ↗
+          </a>
+        ) : (
+          <>
+            <p class="contact-status">
+              A public contact channel is not available yet.
+            </p>
+            <p class="muted">This page will be updated when one is ready.</p>
+          </>
+        )}
+        <a class="text-link" href="/about/">
+          About the publication ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</Base>

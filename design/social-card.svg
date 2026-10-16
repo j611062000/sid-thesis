@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f8f6f0"/>
+  <path d="M64 110H1136M64 536H1136" stroke="#cbd0c3"/>
+  <text x="64" y="77" font-family="Georgia,serif" font-size="35" fill="#204c3e">Sid Thesis<tspan fill="#9c4a2d">.</tspan></text>
+  <text x="64" y="253" font-family="Georgia,serif" font-size="72" fill="#232e29">Understand the systems.</text>
+  <text x="64" y="351" font-family="Georgia,serif" font-style="italic" font-size="78" fill="#204c3e">Follow the value.</text>
+  <text x="64" y="442" font-family="Arial,sans-serif" font-size="24" fill="#62685e">Independent Research on Technology, Business &amp; Capital</text>
+  <text x="64" y="579" font-family="Arial,sans-serif" font-size="19" fill="#62685e">sidthesis.com</text>
+  <circle cx="1121" cy="570" r="7" fill="#9c4a2d"/>
+</svg>
